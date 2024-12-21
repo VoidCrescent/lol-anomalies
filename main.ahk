@@ -64,9 +64,11 @@ FindTextByOcr(x1, y1, x2, y2, wRatio := 1, hRatio := 1) {
     return text
 }
 
-; 搜索记录写到日志文件
+; 搜索记录写出到csv文件
 searchHistoryWriteToFile() {
     outText := ""
+    ; 将currentSearchHistory转换为csv格式
+    outText .= "突变,次数`n"
     for key, value in currentSearchHistory {
         outText .= key "," value "`n"
     }
@@ -78,7 +80,7 @@ searchHistoryWriteToFile() {
         DirCreate(logDir)
     }
     ; 写入到文件
-    FileAppend(outText, "logs/" A_Now ".txt", "`n UTF-8")
+    FileAppend(outText, "logs/" A_Now ".csv", "`n UTF-8")
 }
 
 
@@ -87,7 +89,7 @@ searchHistoryWriteToFile() {
 ; #HotIf
 
 ; 绑定热键F1
-$F1::
+~F1::
 {
     if !WinExist("ahk_exe League of Legends.exe") {
         MsgBox("游戏未运行")
@@ -111,14 +113,18 @@ $F1::
     ; 计算宽度和高度比例
     wRatio := WindowW / 3840
     hRatio := WindowH / 2160
-
+    ShowToolTip(Format("
+    (
+        开始搜索指定的异常突变
+        目标突变: {1}
+    )", targetAnomalies))
     text := FindTextByOcr(1680, 1780, 2130, 1850, wRatio, hRatio)
     ; 判断是否以`选择一名要进化的英雄`开头
     if (InStr(text, "选择一名要进化的英雄") != 1) {
         ShowToolTip("异常突变未出现")
         return
     }
-    ShowToolTip("开始搜索指定的异常突变")
+
     loop {
         if (stopSearch) {
             break
@@ -142,12 +148,12 @@ $F1::
         Sleep 100
     }
     ShowToolTip("搜索结束")
-    ; 写到日志文件
+    ; 写到csv文件
     searchHistoryWriteToFile()
 }
 
 ; 绑定热键F2以停止搜索
-$F2::
+~F2::
 {
     global stopSearch
     stopSearch := true
@@ -161,7 +167,7 @@ $F2::
 ;     Print(text)
 ; }
 
-$F4::
+~F4::
 {
     ShowToolTip("退出")
     Sleep 1500
