@@ -16,6 +16,7 @@ ShowToolTip("
 云顶之弈突变搜索
 按 F1 开始搜索
 按 F2 停止搜索
+按 F4 退出
 )")
 
 
@@ -150,4 +151,11 @@ $F2::
 {
     global stopSearch
     stopSearch := true
+}
+
+$F4::
+{
+    ShowToolTip("退出")
+    Sleep 1500
+    ExitApp
 }
