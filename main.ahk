@@ -14,9 +14,9 @@ if !A_IsAdmin {
 ShowToolTip("
 (
 云顶之弈突变搜索
-按 F1 开始搜索
-按 F2 停止搜索
-按 F4 退出
+按 F1 开始搜索 仅在游戏中按下有效
+按 F2 停止搜索 仅在游戏中按下有效
+按 F10 退出
 )")
 
 
@@ -85,16 +85,15 @@ searchHistoryWriteToFile() {
 
 
 ; 确保在英雄联盟客户端中运行
-; #HotIf WinActive("ahk_exe League of Legends.exe")
-; #HotIf
+#HotIf WinActive("ahk_exe League of Legends.exe")
 
 ; 绑定热键F1
 ~F1::
 {
-    if !WinExist("ahk_exe League of Legends.exe") {
-        MsgBox("游戏未运行")
-        return
-    }
+    ; if !WinExist("ahk_exe League of Legends.exe") {
+    ;     MsgBox("游戏未运行")
+    ;     return
+    ; }
     global stopSearch
     stopSearch := false
     currentSearchHistory.Clear()
@@ -113,17 +112,18 @@ searchHistoryWriteToFile() {
     ; 计算宽度和高度比例
     wRatio := WindowW / 3840
     hRatio := WindowH / 2160
-    ShowToolTip(Format("
-    (
-        开始搜索指定的异常突变
-        目标突变: {1}
-    )", targetAnomalies))
     text := FindTextByOcr(1680, 1780, 2130, 1850, wRatio, hRatio)
     ; 判断是否以`选择一名要进化的英雄`开头
     if (InStr(text, "选择一名要进化的英雄") != 1) {
         ShowToolTip("异常突变未出现")
         return
     }
+
+    ShowToolTip(Format("
+    (
+        开始搜索指定的异常突变
+        目标突变: {1}
+    )", targetAnomalies))
 
     loop {
         if (stopSearch) {
@@ -159,6 +159,8 @@ searchHistoryWriteToFile() {
     stopSearch := true
 }
 
+#HotIf
+
 ; $F3::
 ; {
 ;     FindText().BindWindow(WinExist("ahk_exe League of Legends.exe"), 4)
@@ -167,7 +169,7 @@ searchHistoryWriteToFile() {
 ;     Print(text)
 ; }
 
-~F4::
+~F10::
 {
     ShowToolTip("退出")
     Sleep 1500
