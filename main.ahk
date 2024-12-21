@@ -123,7 +123,7 @@ $F1::
         if (stopSearch) {
             break
         }
-        text := FindTextByOcr(1230, 1860, 2000, 1920, wRatio, hRatio) ; 目标文本: {突变名称}
+        text := FindTextByOcr(1210, 1860, 2000, 1925, wRatio, hRatio) ; 目标文本: {突变名称}
         ; 获取`text`第一行
         text := SubStr(text, 1, InStr(text, "`n") - 1)
         ; 以`{突变名称}`为键, 记录出现的次数
@@ -152,6 +152,14 @@ $F2::
     global stopSearch
     stopSearch := true
 }
+
+; $F3::
+; {
+;     FindText().BindWindow(WinExist("ahk_exe League of Legends.exe"), 4)
+;     FindText().SavePic("screenshot.png",1210, 1860, 2000, 1925, ScreenShot:=1)
+;     text := FindTextByOcr(1210, 1860, 2000, 1925)
+;     Print(text)
+; }
 
 $F4::
 {
